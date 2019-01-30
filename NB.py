@@ -23,9 +23,9 @@ def Word_Make(sentence_list):
     return word_count
 
 
-def Word_Probability(pos_word):
+def Word_Probability(words_list):
 
-    index, count, word = pos_word['index'], pos_word['count'], pos_word['word']
+    index, count, word = words_list['index'], words_list['count'], words_list['word']
     word_prob = []
 
     for i in range(0, len(index)):
@@ -73,4 +73,3 @@ if __name__ == "__main__":
     neg_score = Classification(test_sentence, neg_word_prob)
     print(neg_word_prob)
     print("NB NEG SCORE : " + str(neg_score))
-
