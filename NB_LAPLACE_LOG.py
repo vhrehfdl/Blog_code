@@ -47,13 +47,12 @@ def classification(sentence, senti_words_list, all_word_counts=None):
         for j in range(0, len(senti_words_list)):
             if words[i] == senti_words_list[j][0]:
                 score += math.log(float(senti_words_list[j][1]))
-                print(score)
                 flag = False
 
         if flag:
             score += math.log(float(1 / (len(senti_words_list[j]) + all_word_counts)))
 
-    score = math.log(float(len(positive_sentence) / len(all_sentence))) + score
+    score += math.log(float(len(positive_sentence) / len(all_sentence)))
 
     return score
 
@@ -67,13 +66,13 @@ if __name__ == "__main__":
 
     pos_word_laplace_prob = Word_Probability(pos_word, len(all_word['count']))
     pos_laplace_log_score = classification(test_sentence, pos_word_laplace_prob, len(all_word['count']))
+    print(pos_word_laplace_prob)
     print("NB LAPLACE LOG POS SCORE : " + str(pos_laplace_log_score))
-    print("NB LAPLACE LOG POS SCORE : " + str(math.exp(pos_laplace_log_score)))
     print("\n" * 2)
 
 
     neg_word_laplace_prob = Word_Probability(neg_word, len(all_word['count']))
     neg_laplace_log_score = classification(test_sentence, neg_word_laplace_prob, len(all_word['count']))
+    print(neg_word_laplace_prob)
     print("NB LAPLACE LOG NEG SCORE : " + str(neg_laplace_log_score))
-    print("NB LAPLACE LOG NEG SCORE : " + str(math.exp(neg_laplace_log_score)))
 
