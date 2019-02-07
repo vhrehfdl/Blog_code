@@ -39,30 +39,5 @@ def data_small(input_file, output_file):
                 wr = csv.writer(output_file)
                 wr.writerow([data[i][0], data[i][1]])
 
-    print(pos)
-    print(neg)
 
-        # try:
-        #     texts = komo.pos(data[i][0])
-        #     sentence = ""
-        #
-        #     print(i)
-        #
-        #     for j in range(0, len(texts)):
-        #         # if texts[j][1] == "NNG" or texts[j][1] == "NNP" or texts[j][1] == "NP" or texts[j][1] == "NR" or texts[j][1] == "VV" or texts[j][1] == "VA" or texts[j][1] == "VCN" or texts[j][1] == "VCP":
-        #         if texts[j][1] == "NNG" or texts[j][1] == "NNP":
-        #         # if texts[j][1] == "VV" or texts[j][1] == "VA":
-        #
-        #             if len(texts[j][0]) > 2 :
-        #                 sentence = sentence + " " + texts[j][0]
-        #
-        #     wr = csv.writer(output_file)
-        #     wr.writerow([sentence, data[i][1]])
-        #
-        #
-        # except:
-        #     i += 1
-
-
-
-data_small("../data/data_label.csv", "../data/data_small.csv")
+data_small("../data/train.csv", "../data/train_small.csv")

@@ -108,10 +108,9 @@ def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0'
 
 
 if __name__ == "__main__":
-    DataSet = Load_Data("../data/train_small.csv", "../data/validation.csv")
+    DataSet = Load_Data("../data/train.csv", "../data/validation.csv")
     TextToVec_DataSet = Convert_Text_To_Vector(DataSet)
-    classifier = svm.SVC()
-    # classifier = svm.SVC(kernel='rbf', C=10, gamma=0.1)
+    classifier = xgboost.XGBClassifier()
     accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)
 
     print("모델 정확도: ", accuracy)
