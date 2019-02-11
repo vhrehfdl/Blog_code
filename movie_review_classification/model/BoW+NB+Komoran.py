@@ -1,20 +1,16 @@
-from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm, ensemble
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn import preprocessing, naive_bayes, metrics
+from sklearn.feature_extraction.text import CountVectorizer
 import pandas
 import csv
 from sklearn.metrics import classification_report
-from sklearn.utils import shuffle
 
 
-'''
-[1] Load_Data
-'''
 
 def Load_Data(train_file_dir, validation_file_dir):
-    train_file = open(train_file_dir, 'r', encoding='utf-8')           # 학습 데이터 파일 읽기
+    train_file = open(train_file_dir, 'r', encoding='utf-8')  # 학습 데이터 파일 읽기
     csv_reader_train = csv.reader(train_file)
 
-    valid_file = open(validation_file_dir, 'r', encoding='utf-8')  # 학습 데이터 파일 읽기
+    valid_file = open(validation_file_dir, 'r', encoding='utf-8')  # 검증 데이터 파일 읽기
     csv_reader_valid = csv.reader(valid_file)
 
     all_texts = []
@@ -43,14 +39,14 @@ def Load_Data(train_file_dir, validation_file_dir):
 
     valid_file.close()
 
+
     # 전체, 학습, 검증 데이터 프레임 미리 만들어둔다.
     dfAll, dfTrain, dfValid = pandas.DataFrame(), pandas.DataFrame(), pandas.DataFrame()
     dfAll['text'] = all_texts
     dfTrain['text'], dfTrain['label'] = train_texts, train_labels
     dfValid['text'], dfValid['label'] = valid_texts, valid_labels
 
-
-    # 라벨링을 해준다.
+    # 라벨링 진행
     encoder = preprocessing.LabelEncoder()
     train_y, valid_y = encoder.fit_transform(dfTrain['label']), encoder.fit_transform(dfValid['label'])
 
@@ -60,9 +56,6 @@ def Load_Data(train_file_dir, validation_file_dir):
 
 
 
-'''
-[2] Convert_Text_To_Vector
-'''
 def Convert_Text_To_Vector(DataSet):
 
     AllTextData = DataSet['all_text_data']
@@ -71,11 +64,13 @@ def Convert_Text_To_Vector(DataSet):
 
     word_index, embedding_matrix = None, None   # Word Embedding 일 경우에만 사용한다.
 
-    # BOW
+    # 문장을 단어로 잘라준다.
     count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
     count_vect.fit(AllTextData)
+
     train_count = count_vect.transform(train_text)
     print(train_count.shape)
+
     valid_count = count_vect.transform(valid_text)
     print(valid_count.shape)
 
@@ -85,18 +80,15 @@ def Convert_Text_To_Vector(DataSet):
 
 
 
-'''
-[3] Train_Model
-'''
 def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0', '1']):
 
     train_count, train_label = text_to_vector_data_set['train_count'], data_set['train_label']
     valid_count, valid_label = text_to_vector_data_set['valid_count'], data_set['valid_label']
 
-    # train_count와 train_label로 학습해서 모델 생성.
+    # train_count와 train_label로 분류 model 생성.
     classifier.fit(train_count, train_label)
 
-    # 학습된 모델에 valid_count를 넣어 정답 예측하기.
+    # 위에서 만든 model에 검증 데이터 ( valid_count )를 넣어서 분류한다.
     predictions = classifier.predict(valid_count)
 
     print("-" * 33)
@@ -107,14 +99,14 @@ def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0'
 
 
 if __name__ == "__main__":
-    # DataSet = Load_Data("../data/train_komoran1.csv", "../data/validation_komoran1.csv")
+    # DataSet = Load_Data("../data/train_komoran1.csv", "../data/validation_komoran1.csv")          # 1. 전처리 된 학습데이터와 검증데이터를 불러온다.
     # DataSet = Load_Data("../data/train_komoran2.csv", "../data/validation_komoran2.csv")
     # DataSet = Load_Data("../data/train_komoran3.csv", "../data/validation_komoran3.csv")
     # DataSet = Load_Data("../data/train_komoran4.csv", "../data/validation_komoran4.csv")
     DataSet = Load_Data("../data/train_komoran5.csv", "../data/validation_komoran5.csv")
 
-    TextToVec_DataSet = Convert_Text_To_Vector(DataSet)
-    classifier = naive_bayes.MultinomialNB()
+    TextToVec_DataSet = Convert_Text_To_Vector(DataSet)         # 2. 불러온 Text 데이터를 Vector로 변환해준다.
+    classifier = naive_bayes.MultinomialNB()            # 3. MultinomialNB를 사용해 분류 model을 만든다.
     # classifier = naive_bayes.BaseNB()
     # classifier = naive_bayes.GaussianNB()
     # classifier = naive_bayes.BernoulliNB()

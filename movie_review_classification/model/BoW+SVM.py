@@ -1,30 +1,16 @@
-import xgboost
-from konlpy.tag import Komoran
-from konlpy.utils import pprint
-from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm, ensemble
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn import preprocessing, metrics, svm
+from sklearn.feature_extraction.text import CountVectorizer
 import pandas
-import numpy as np
-import nltk
-from nltk.corpus import *
-from nltk.stem import WordNetLemmatizer
-from nltk.stem.lancaster import LancasterStemmer
 import csv
 from sklearn.metrics import classification_report
-from keras import layers, models, optimizers
-import keras
-import numpy
-from keras.preprocessing import text, sequence
 
-'''
-[1] Load_Data
-'''
+
 
 def Load_Data(train_file_dir, validation_file_dir):
-    train_file = open(train_file_dir, 'r', encoding='utf-8')           # 학습 데이터 파일 읽기
+    train_file = open(train_file_dir, 'r', encoding='utf-8')  # 학습 데이터 파일 읽기
     csv_reader_train = csv.reader(train_file)
 
-    valid_file = open(validation_file_dir, 'r', encoding='utf-8')  # 학습 데이터 파일 읽기
+    valid_file = open(validation_file_dir, 'r', encoding='utf-8')  # 검증 데이터 파일 읽기
     csv_reader_valid = csv.reader(valid_file)
 
     all_texts = []
@@ -51,7 +37,7 @@ def Load_Data(train_file_dir, validation_file_dir):
     dfTrain['text'], dfTrain['label'] = train_texts, train_labels
     dfValid['text'], dfValid['label'] = valid_texts, valid_labels
 
-    # 라벨링을 해준다.
+    # 라벨링 진행
     encoder = preprocessing.LabelEncoder()
     train_y, valid_y = encoder.fit_transform(dfTrain['label']), encoder.fit_transform(dfValid['label'])
 
@@ -61,9 +47,6 @@ def Load_Data(train_file_dir, validation_file_dir):
 
 
 
-'''
-[2] Convert_Text_To_Vector
-'''
 def Convert_Text_To_Vector(DataSet):
 
     AllTextData = DataSet['all_text_data']
@@ -72,11 +55,13 @@ def Convert_Text_To_Vector(DataSet):
 
     word_index, embedding_matrix = None, None   # Word Embedding 일 경우에만 사용한다.
 
-    # BOW
+    # 문장을 단어로 잘라준다.
     count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
     count_vect.fit(AllTextData)
+
     train_count = count_vect.transform(train_text)
     print(train_count.shape)
+
     valid_count = count_vect.transform(valid_text)
     print(valid_count.shape)
 
@@ -86,9 +71,6 @@ def Convert_Text_To_Vector(DataSet):
 
 
 
-'''
-[3] Train_Model
-'''
 def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0', '1']):
 
     train_count, train_label = text_to_vector_data_set['train_count'], data_set['train_label']
@@ -107,11 +89,16 @@ def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0'
 
 
 
+
+
 if __name__ == "__main__":
-    DataSet = Load_Data("../data/train_small.csv", "../data/validation.csv")
-    TextToVec_DataSet = Convert_Text_To_Vector(DataSet)
-    classifier = svm.SVC()
+    DataSet = Load_Data("../data/train_small.csv", "../data/validation.csv")            # 1. 학습데이터와 검증데이터를 불러온다.
+    TextToVec_DataSet = Convert_Text_To_Vector(DataSet)                                 # 2. 불러온 Text 데이터를 Vector로 변환해준다.
+
+    # classifier = svm.SVC()                                                            # 3. 알고리즘을 사용해 model을 만든다.
+    classifier = svm.LinearSVC()
     # classifier = svm.SVC(kernel='rbf', C=10, gamma=0.1)
+
     accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)
 
     print("모델 정확도: ", accuracy)
