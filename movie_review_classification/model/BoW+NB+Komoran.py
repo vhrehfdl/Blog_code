@@ -105,12 +105,14 @@ if __name__ == "__main__":
     # DataSet = Load_Data("../data/train_komoran4.csv", "../data/validation_komoran4.csv")
     DataSet = Load_Data("../data/train_komoran5.csv", "../data/validation_komoran5.csv")
 
-    TextToVec_DataSet = Convert_Text_To_Vector(DataSet)         # 2. 불러온 Text 데이터를 Vector로 변환해준다.
-    classifier = naive_bayes.MultinomialNB()            # 3. MultinomialNB를 사용해 분류 model을 만든다.
+    TextToVec_DataSet = Convert_Text_To_Vector(DataSet)                     # 2. 불러온 Text 데이터를 Vector로 변환해준다.
+
+    classifier = naive_bayes.MultinomialNB()                                # 3. 알고리즘을 사용해 model을 만든다.
     # classifier = naive_bayes.BaseNB()
     # classifier = naive_bayes.GaussianNB()
     # classifier = naive_bayes.BernoulliNB()
-    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)
+
+    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)          # 4. model을 만들고 정확도를 측정한다.
 
     print("모델 정확도: ", accuracy)
     print("-" * 33)

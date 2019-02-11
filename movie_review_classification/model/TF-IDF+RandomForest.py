@@ -1,30 +1,16 @@
-import xgboost
-from konlpy.tag import Komoran
-from konlpy.utils import pprint
-from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm, ensemble
+from sklearn import preprocessing, metrics, ensemble
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 import pandas
-import numpy as np
-import nltk
-from nltk.corpus import *
-from nltk.stem import WordNetLemmatizer
-from nltk.stem.lancaster import LancasterStemmer
 import csv
 from sklearn.metrics import classification_report
-from keras import layers, models, optimizers
-import keras
-import numpy
-from keras.preprocessing import text, sequence
 
-'''
-[1] Load_Data
-'''
+
 
 def Load_Data(train_file_dir, validation_file_dir):
-    train_file = open(train_file_dir, 'r', encoding='utf-8')           # 학습 데이터 파일 읽기
+    train_file = open(train_file_dir, 'r', encoding='utf-8')  # 학습 데이터 파일 읽기
     csv_reader_train = csv.reader(train_file)
 
-    valid_file = open(validation_file_dir, 'r', encoding='utf-8')  # 학습 데이터 파일 읽기
+    valid_file = open(validation_file_dir, 'r', encoding='utf-8')  # 검증 데이터 파일 읽기
     csv_reader_valid = csv.reader(valid_file)
 
     all_texts = []
@@ -51,7 +37,7 @@ def Load_Data(train_file_dir, validation_file_dir):
     dfTrain['text'], dfTrain['label'] = train_texts, train_labels
     dfValid['text'], dfValid['label'] = valid_texts, valid_labels
 
-    # 라벨링을 해준다.
+    # 라벨링 진행.
     encoder = preprocessing.LabelEncoder()
     train_y, valid_y = encoder.fit_transform(dfTrain['label']), encoder.fit_transform(dfValid['label'])
 
@@ -132,11 +118,11 @@ def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0'
 
 
 if __name__ == "__main__":
-    DataSet = Load_Data("../data/train_small.csv", "../data/validation.csv")
+    DataSet = Load_Data("../data/train_small.csv", "../data/validation.csv")            # 1. 학습데이터와 검증데이터를 불러온다.
 
-    TextToVec_DataSet = Convert_Text_To_Vector(DataSet, "TF_IDF_COUNT")
-    classifier = ensemble.RandomForestClassifier()
-    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)
+    TextToVec_DataSet = Convert_Text_To_Vector(DataSet, "TF_IDF_COUNT")                 # 2. 불러온 Text 데이터를 Vector로 변환해준다.
+    classifier = ensemble.RandomForestClassifier()                                      # 3. 사용할 알고리즘 정의
+    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)                      # 4. model을 만들고 정확도를 측정한다.
 
     print("TF_IDF_COUNT 모델 정확도: ", accuracy)
     print("-" * 33)

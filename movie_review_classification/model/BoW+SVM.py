@@ -95,11 +95,11 @@ if __name__ == "__main__":
     DataSet = Load_Data("../data/train_small.csv", "../data/validation.csv")            # 1. 학습데이터와 검증데이터를 불러온다.
     TextToVec_DataSet = Convert_Text_To_Vector(DataSet)                                 # 2. 불러온 Text 데이터를 Vector로 변환해준다.
 
-    # classifier = svm.SVC()                                                            # 3. 알고리즘을 사용해 model을 만든다.
+    # classifier = svm.SVC()                                                            # 3. 사용할 알고리즘 정의
     classifier = svm.LinearSVC()
     # classifier = svm.SVC(kernel='rbf', C=10, gamma=0.1)
 
-    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)
+    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)                      # 4. model을 만들고 정확도를 측정한다.
 
     print("모델 정확도: ", accuracy)
     print("-" * 33)

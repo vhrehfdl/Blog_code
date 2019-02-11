@@ -76,10 +76,10 @@ def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0'
     train_count, train_label = text_to_vector_data_set['train_count'], data_set['train_label']
     valid_count, valid_label = text_to_vector_data_set['valid_count'], data_set['valid_label']
 
-    # train_count와 train_label로 분류 model 생성.
+    # train_count와 train_label로 학습해서 모델 생성.
     classifier.fit(train_count, train_label)
 
-    # 위에서 만든 model에 검증 데이터 ( valid_count )를 넣어서 분류한다.
+    # 학습된 모델에 valid_count를 넣어 정답 예측하기.
     predictions = classifier.predict(valid_count)
 
     print("-" * 33)
@@ -94,11 +94,13 @@ def Train_Model(classifier, data_set, text_to_vector_data_set, target_names=['0'
 if __name__ == "__main__":
     DataSet = Load_Data("../data/train.csv", "../data/validation.csv")          # 1. 학습데이터와 검증데이터를 불러온다.
     TextToVec_DataSet = Convert_Text_To_Vector(DataSet)                         # 2. 불러온 Text 데이터를 Vector로 변환해준다.
-    classifier = naive_bayes.MultinomialNB()                                    # 3. MultinomialNB를 사용해 분류 model을 만든다.
+
+    classifier = naive_bayes.MultinomialNB()                                    # 3. 사용할 알고리즘 정의
     # classifier = naive_bayes.BaseNB()
     # classifier = naive_bayes.GaussianNB()
     # classifier = naive_bayes.BernoulliNB()
-    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)
+
+    accuracy = Train_Model(classifier, DataSet, TextToVec_DataSet)              # 4. model을 만들고 정확도를 측정한다.
 
     print("모델 정확도: ", accuracy)
     print("-" * 33)
